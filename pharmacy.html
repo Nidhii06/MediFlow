@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacy Dashboard | MediFlow</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f8fc;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(90deg, #0d47a1, #1976d2);
+      color: white;
+      padding: 18px 40px;
+      font-size: 22px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .top-bar h2 {
+      color: #0d47a1;
+      margin: 0;
+    }
+
+    button {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      background: #1976d2;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    /* ORDER CARDS */
+    .orders {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .order-id {
+      font-weight: bold;
+      color: #1976d2;
+      margin-bottom: 6px;
+    }
+
+    .patient {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .Created { background: #e3f2fd; color: #0d47a1; }
+    .Packed { background: #fff3cd; color: #856404; }
+    .Ready { background: #d1ecf1; color: #0c5460; }
+    .Collected { background: #d4edda; color: #155724; }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .footer {
+      text-align: center;
+      margin: 50px 0 20px;
+      color: #888;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    MediFlow Pharmacy Dashboard
+  </div>
+
+  <div class="container">
+
+    <div class="top-bar">
+      <h2>Pending Medicine Orders</h2>
+      <button onclick="loadOrders()">Load Orders</button>
+    </div>
+
+    <div class="orders" id="orders"></div>
+
+  </div>
+
+  <div class="footer">
+    © 2026 MediFlow Hospital Systems
+  </div>
+
+  <script>
+    function loadOrders() {
+      fetch("http://localhost:3000/pharmacy/orders")
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("orders");
+          container.innerHTML = "";
+
+          data.forEach(order => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+              <div class="order-id">${order.order_id}</div>
+              <div class="patient">Patient: ${order.patient_name}</div>
+
+              <div class="status ${order.status}">
+                ${order.status}
+              </div>
+
+              <select onchange="updateStatus('${order.order_id}', this.value)">
+                <option value="">Update Status</option>
+                <option value="Packed">Packed</option>
+                <option value="Ready">Ready</option>
+                <option value="Collected">Collected</option>
+              </select>
+            `;
+
+            container.appendChild(card);
+          });
+        });
+    }
+
+    function updateStatus(orderId, status) {
+      if (!status) return;
+
+      fetch("http://localhost:3000/pharmacy/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, status })
+      })
+      .then(res => res.json())
+      .then(() => {
+        alert("Status updated successfully");
+        loadOrders();
+      });
+    }
+  </script>
+
+</body>
+</html>

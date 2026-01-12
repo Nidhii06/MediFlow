@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Doctor Dashboard | MediFlow</title>
+  <link rel="stylesheet" href="doctor-dashboard.css">
+</head>
+<body>
+
+<!-- Overlay -->
+<div id="overlay" onclick="toggleMenu()"></div>
+
+<!-- Top Navbar -->
+<header class="topbar">
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+  <h2>MediFlow Doctor Portal</h2>
+  <button class="logout-btn">Logout</button>
+</header>
+
+<!-- Sidebar -->
+<aside id="sidebar">
+  <h3>Doctor Menu</h3>
+  <ul>
+    <li>🏠 Dashboard</li>
+    <li>📝 New Prescription</li>
+    <li>📄 My Prescriptions</li>
+    <li>👨‍⚕️ Patient Records</li>
+    <li>📊 Reports & Analytics</li>
+    <li>💊 Pharmacy Status</li>
+    <li>⚙️ Settings</li>
+  </ul>
+</aside>
+
+<!-- Main Content -->
+<main class="content">
+  <h1>Welcome, Doctor</h1>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <h3>Create Prescription</h3>
+      <p>Generate a new prescription for patients.</p>
+      <button onclick="goToPrescription()">Create</button>
+
+    </div>
+
+    <div class="card">
+      <h3>Prescription History</h3>
+      <p>View your previous prescriptions.</p>
+      <button>View</button>
+    </div>
+
+    <div class="card">
+      <h3>Patient Records</h3>
+      <p>Access patient medical history.</p>
+      <button>Open</button>
+    </div>
+
+    <div class="card">
+      <h3>Pharmacy Updates</h3>
+      <p>Track medicine preparation status.</p>
+      <button>Track</button>
+    </div>
+
+    <div class="card muted">
+      <h3>Appointments</h3>
+      <p>(Coming soon)</p>
+    </div>
+
+    <div class="card muted">
+      <h3>Lab Reports</h3>
+      <p>(Coming soon)</p>
+    </div>
+
+  </div>
+</main>
+
+<script src="doctor-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Doctor Login | MediFlow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+  <!-- TOP BAR -->
+  <div class="login-header">
+    <h1>MediFlow Hospital</h1>
+    <p>Doctor Portal</p>
+  </div>
+
+  <!-- LOGIN CARD -->
+  <div class="login-container">
+    <div class="login-card">
+
+      <h2>Doctor Login</h2>
+      <p class="login-subtext">
+        Authorized medical professionals only
+      </p>
+
+      <input type="text" id="doctorId" placeholder="Doctor ID">
+      <input type="password" id="password" placeholder="Password">
+
+      <button onclick="loginDoctor()">Login</button>
+
+      <div class="login-links">
+        <a href="#">Forgot Password?</a>
+        <a href="#">Forgot Doctor ID?</a>
+      </div>
+
+      <p id="loginMsg"></p>
+
+    </div>
+  </div>
+
+  <script>
+    function loginDoctor() {
+      const doctorId = document.getElementById("doctorId").value;
+      const password = document.getElementById("password").value;
+
+      fetch("http://localhost:3000/auth/doctor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ doctor_id: doctorId, password })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem("doctorId", doctorId);
+          window.location.href = "doctor-dashboard.html";
+        } else {
+          document.getElementById("loginMsg").innerText = "Invalid credentials";
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

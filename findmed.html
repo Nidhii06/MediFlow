@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find Medicine Locally</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      text-align: center;
+    }
+
+    input {
+      padding: 10px;
+      width: 250px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    .result {
+      background: white;
+      width: 400px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Find Medicine in Nearby Pharmacies</h2>
+
+  <input id="medName" placeholder="Enter medicine name">
+  <button onclick="search()">Search</button>
+
+  <div id="results"></div>
+
+  <script>
+    const pharmacyData = [
+      { name: "Apollo Pharmacy", medicine: "Paracetamol", status: "Available" },
+      { name: "City Medical Store", medicine: "Paracetamol", status: "Out of Stock" },
+      { name: "Wellness Pharmacy", medicine: "Azithromycin", status: "Limited" }
+    ];
+
+    function search() {
+      const query = document.getElementById("medName").value.toLowerCase();
+      let output = "";
+
+      pharmacyData.forEach(p => {
+        if (p.medicine.toLowerCase().includes(query)) {
+          output += `
+            <div class="result">
+              <b>Pharmacy:</b> ${p.name}<br>
+              <b>Medicine:</b> ${p.medicine}<br>
+              <b>Status:</b> ${p.status}
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById("results").innerHTML =
+        output || "<p>No results found.</p>";
+    }
+  </script>
+
+</body>
+</html>

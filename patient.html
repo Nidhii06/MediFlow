@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Medicine Order | MediFlow</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f8fc;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 600px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0d47a1;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    /* STATUS TRACKER */
+    .tracker {
+      margin-top: 35px;
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .tracker::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      left: 10%;
+      width: 80%;
+      height: 4px;
+      background: #e0e0e0;
+      z-index: 0;
+    }
+
+    .step {
+      text-align: center;
+      z-index: 1;
+      width: 25%;
+    }
+
+    .circle {
+      width: 36px;
+      height: 36px;
+      margin: auto;
+      border-radius: 50%;
+      background: #e0e0e0;
+      color: white;
+      line-height: 36px;
+      font-weight: bold;
+    }
+
+    .active .circle {
+      background: #1976d2;
+    }
+
+    .label {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    /* INFO BOXES */
+    .info {
+      margin-top: 30px;
+      padding: 15px;
+      background: #f1f6ff;
+      border-left: 5px solid #1976d2;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #888;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Track Your Medicine Order</h2>
+
+    <input id="orderId" placeholder="Enter Order ID">
+    <button onclick="trackOrder()">Track Order</button>
+
+    <!-- STATUS TRACKER -->
+    <div class="tracker" id="tracker" style="display:none;">
+      <div class="step" id="created">
+        <div class="circle">1</div>
+        <div class="label">Created</div>
+      </div>
+
+      <div class="step" id="packed">
+        <div class="circle">2</div>
+        <div class="label">Packed</div>
+      </div>
+
+      <div class="step" id="ready">
+        <div class="circle">3</div>
+        <div class="label">Ready</div>
+      </div>
+
+      <div class="step" id="collected">
+        <div class="circle">4</div>
+        <div class="label">Collected</div>
+      </div>
+    </div>
+
+    <!-- EXTRA INFO -->
+    <div class="info" id="extraInfo" style="display:none;">
+      💊 Please carry your Order ID and valid ID proof while collecting medicines.
+    </div>
+
+    <div class="footer">
+      © 2026 MediFlow Hospital Systems
+    </div>
+  </div>
+<script>
+  function resetTracker() {
+    ["created","packed","ready","collected"].forEach(id => {
+      document.getElementById(id).classList.remove("active");
+    });
+  }
+
+  function trackOrder() {
+    const orderId = document.getElementById("orderId").value.trim();
+
+    if (!orderId) {
+      alert("Please enter Order ID");
+      return;
+    }
+
+    fetch("http://localhost:3000/patient/track/" + orderId)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.status || data.status === "Invalid Order ID") {
+          alert("Order not found");
+          return;
+        }
+
+        document.getElementById("tracker").style.display = "flex";
+        document.getElementById("extraInfo").style.display = "block";
+
+        resetTracker();
+
+        if (data.status === "Created") {
+          document.getElementById("created").classList.add("active");
+        }
+
+        if (data.status === "Packed") {
+          document.getElementById("created").classList.add("active");
+          document.getElementById("packed").classList.add("active");
+        }
+
+        if (data.status === "Ready") {
+          document.getElementById("created").classList.add("active");
+          document.getElementById("packed").classList.add("active");
+          document.getElementById("ready").classList.add("active");
+        }
+
+        if (data.status === "Collected") {
+          document.querySelectorAll(".step").forEach(step => {
+            step.classList.add("active");
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Server error");
+      });
+  }
+</script>
+
+ </body>
+</html>
