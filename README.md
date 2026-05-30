@@ -1,8 +1,7 @@
 # MediFlow 
 
 MediFlow is a web-based healthcare application designed to help users
-check medicine availability and streamline communication between patients
-and pharmacies.
+check medicine availability and streamline communication between patients, pharmacies and doctors.
 
 ## Features
 - Medicine search and availability tracking
